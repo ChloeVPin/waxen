@@ -6,7 +6,7 @@ on:
 
 jobs:
   macos:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Select Swift
@@ -20,11 +20,11 @@ jobs:
         run: |
           python3 -m json.tool Schemas/diagnosis-v1.json >/dev/null
           swift build -c release
-          sh Scripts/test-schema.sh /tmp/waxen-schema
+          bash Scripts/test-schema.sh /tmp/waxen-schema
       - name: Generate fixtures
-        run: sh Scripts/make-fixtures.sh /tmp/waxen-fixtures
+        run: bash Scripts/make-fixtures.sh /tmp/waxen-fixtures
       - name: Real macOS integration fixtures
-        run: sh Scripts/integration-macos.sh /tmp/waxen-real-integration
+        run: bash Scripts/integration-macos.sh /tmp/waxen-real-integration
       - name: Diagnose fixture (expected unsigned blocker)
         shell: bash
         run: |
@@ -89,7 +89,7 @@ jobs:
           assert any(item in ('signature.unsigned', 'signature.invalid') for item in ids)
           PY
       - name: Action wrapper tests
-        run: bash Scripts/test-action.sh
+        run: babash Scripts/test-action.sh
       - name: Action on unsigned fixture (expect blocker)
         id: blocked
         continue-on-error: true

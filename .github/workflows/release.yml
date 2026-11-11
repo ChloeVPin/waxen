@@ -12,7 +12,7 @@ permissions:
 jobs:
   source-validation:
     name: Source and real macOS validation
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Test
@@ -23,7 +23,7 @@ jobs:
         shell: bash
         run: |
           python3 -m json.tool Schemas/diagnosis-v1.json >/dev/null
-          sh Scripts/make-fixtures.sh /tmp/waxen-fixtures >/dev/null
+          bash Scripts/make-fixtures.sh /tmp/waxen-fixtures >/dev/null
           set +e
           .build/release/waxen diagnose /tmp/waxen-fixtures/Valid.app --json >/tmp/waxen-valid.json
           status=$?
@@ -31,13 +31,13 @@ jobs:
           test "$status" -eq 1
           python3 Scripts/validate-report.py /tmp/waxen-valid.json
       - name: Real macOS integration fixtures
-        run: sh Scripts/integration-macos.sh /tmp/waxen-real-integration
+        run: bash Scripts/integration-macos.sh /tmp/waxen-real-integration
 
   signed-release:
     name: Developer ID signed and notarized release
     needs: source-validation
     if: ${{ vars.RELEASE_CREDENTIALS_CONFIGURED == 'true' }}
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
       APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -60,7 +60,7 @@ jobs:
             fi
           done
       - name: Build signed and notarized artifacts
-        run: sh Scripts/release-signed.sh "$RUNNER_TEMP/release-artifacts"
+        run: bash Scripts/release-signed.sh "$RUNNER_TEMP/release-artifacts"
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -76,7 +76,7 @@ jobs:
     name: Explain skipped notarization
     needs: source-validation
     if: ${{ vars.RELEASE_CREDENTIALS_CONFIGURED != 'true' }}
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Credential gate
         run: |

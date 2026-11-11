@@ -62,8 +62,9 @@ security import "$CERTIFICATE" -k "$KEYCHAIN" -P "$CERTIFICATE_PASSWORD" -T /usr
 security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
 security list-keychains -d user -s "$KEYCHAIN"
 
-swift build -c release
-cp "$ROOT/.build/arm64-apple-macosx/release/waxen" "$STAGING/bin/waxen"
+swift build -c release --package-path "$ROOT"
+BIN_DIR=$(swift build -c release --package-path "$ROOT" --show-bin-path)
+cp "$BIN_DIR/waxen" "$STAGING/bin/waxen"
 codesign --force --options runtime --timestamp --sign "$IDENTITY" "$STAGING/bin/waxen"
 codesign --verify --strict --verbose=4 "$STAGING/bin/waxen"
 
