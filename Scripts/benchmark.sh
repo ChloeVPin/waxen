@@ -2,8 +2,8 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-BINARY="$ROOT/.build/release/launchdx"
-OUTPUT_DIR="${1:-/tmp/launchdx-benchmark}"
+BINARY="$ROOT/.build/release/waxen"
+OUTPUT_DIR="${1:-/tmp/waxen-benchmark}"
 
 if [ ! -x "$BINARY" ]; then
   echo "Release binary not found. Run swift build -c release first." >&2
@@ -36,7 +36,7 @@ for resource_count in (0, 5000):
         resources = app / "Contents" / "Resources"
         resources.mkdir()
         for index in range(resource_count):
-            (resources / f"resource_{index}.txt").write_text("launchdx benchmark payload\n")
+            (resources / f"resource_{index}.txt").write_text("waxen benchmark payload\n")
         frameworks = app / "Contents" / "Frameworks"
         frameworks.mkdir()
         for index in range(nested_count):

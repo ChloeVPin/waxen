@@ -21,7 +21,7 @@ make_app() {
 <plist version="1.0">
 <dict>
   <key>CFBundleIdentifier</key>
-  <string>dev.launchdx.fixture</string>
+  <string>dev.waxen.fixture</string>
   <key>CFBundleExecutable</key>
   <string>${executable_name}</string>
 </dict>
@@ -47,7 +47,7 @@ if command -v hdiutil >/dev/null 2>&1; then
   mkdir -p "$src_dir"
   cp -R "$output_dir/Valid.app" "$src_dir/Valid.app"
   rm -f "$output_dir/Valid.dmg"
-  hdiutil create -volname LaunchDXFixture -srcfolder "$src_dir" -ov -format UDZO "$output_dir/Valid.dmg" >/dev/null
+  hdiutil create -volname WaxenFixture -srcfolder "$src_dir" -ov -format UDZO "$output_dir/Valid.dmg" >/dev/null
 fi
 
 if command -v pkgbuild >/dev/null 2>&1; then
@@ -56,7 +56,7 @@ if command -v pkgbuild >/dev/null 2>&1; then
   mkdir -p "$pkg_root"
   cp -R "$output_dir/Valid.app" "$pkg_root/Valid.app"
   rm -f "$output_dir/Valid.pkg"
-  pkgbuild --root "$pkg_root" --identifier "dev.launchdx.fixture" --version "0.0.1" "$output_dir/Valid.pkg" >/dev/null
+  pkgbuild --root "$pkg_root" --identifier "dev.waxen.fixture" --version "0.0.1" "$output_dir/Valid.pkg" >/dev/null
 fi
 
 printf 'Fixtures written to %s\n' "$output_dir"

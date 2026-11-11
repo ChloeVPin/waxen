@@ -13,7 +13,7 @@ It requires:
 5. spctl
 6. xattr
 7. plutil
-8. A release build of launchdx
+8. A release build of waxen
 
 It does not require a Developer ID certificate, Apple Developer membership, notarization credentials, or administrator privileges. The fixtures use ad hoc signing only.
 
@@ -21,16 +21,16 @@ It does not require a Developer ID certificate, Apple Developer membership, nota
 
 ```bash
 swift build -c release
-sh Scripts/integration-macos.sh /tmp/launchdx-real-integration
+sh Scripts/integration-macos.sh /tmp/waxen-real-integration
 ```
 
-The script creates and removes only its output directory. It never modifies installed applications. It verifies native strict signing behavior, then validates launchdx JSON reports with the repository schema validator.
+The script creates and removes only its output directory. It never modifies installed applications. It verifies native strict signing behavior, then validates waxen JSON reports with the repository schema validator.
 
 ## Cases
 
 1. `AdHoc.app` is a real arm64 executable with an ad hoc signature. Ad hoc signing is reported as a distribution warning. If Gatekeeper rejects it, that policy result is the launch blocker.
-2. `Modified.app` is signed, then a sealed resource is changed. Native `codesign` must reject it and launchdx must identify invalid signature evidence.
-3. `NestedUnsigned.app` contains an unsigned nested helper before the host is signed. Native strict signing and launchdx must identify the nested defect.
+2. `Modified.app` is signed, then a sealed resource is changed. Native `codesign` must reject it and waxen must identify invalid signature evidence.
+3. `NestedUnsigned.app` contains an unsigned nested helper before the host is signed. Native strict signing and waxen must identify the nested defect.
 4. `Modified.app` receives a quarantine attribute so the report can prove that quarantine is a trigger and not automatically the root cause.
 5. `AdHoc.dmg` wraps `AdHoc.app` so container unpack reuses the nested application diagnosis.
 

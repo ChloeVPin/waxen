@@ -20,22 +20,22 @@ jobs:
         run: |
           python3 -m json.tool Schemas/diagnosis-v1.json >/dev/null
           swift build -c release
-          sh Scripts/test-schema.sh /tmp/launchdx-schema
+          sh Scripts/test-schema.sh /tmp/waxen-schema
       - name: Generate fixtures
-        run: sh Scripts/make-fixtures.sh /tmp/launchdx-fixtures
+        run: sh Scripts/make-fixtures.sh /tmp/waxen-fixtures
       - name: Real macOS integration fixtures
-        run: sh Scripts/integration-macos.sh /tmp/launchdx-real-integration
+        run: sh Scripts/integration-macos.sh /tmp/waxen-real-integration
       - name: Diagnose fixture (expected unsigned blocker)
         shell: bash
         run: |
           set +e
-          .build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.app --json > /tmp/launchdx-valid.json
+          .build/release/waxen diagnose /tmp/waxen-fixtures/Valid.app --json > /tmp/waxen-valid.json
           status=$?
           set -e
           test "$status" -eq 1
           python3 - <<'PY'
           import json
-          with open('/tmp/launchdx-valid.json') as handle:
+          with open('/tmp/waxen-valid.json') as handle:
               report = json.load(handle)
           assert report['launchStatus'] == 'blocked'
           assert any(item['id'] in ('signature.unsigned', 'signature.invalid') for item in report['findings'])
@@ -43,18 +43,18 @@ jobs:
       - name: Diagnose disk image fixture (expected unsigned blocker)
         shell: bash
         run: |
-          if [ ! -f /tmp/launchdx-fixtures/Valid.dmg ]; then
+          if [ ! -f /tmp/waxen-fixtures/Valid.dmg ]; then
             echo "Valid.dmg was not generated"
             exit 1
           fi
           set +e
-          .build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.dmg --json > /tmp/launchdx-valid-dmg.json
+          .build/release/waxen diagnose /tmp/waxen-fixtures/Valid.dmg --json > /tmp/waxen-valid-dmg.json
           status=$?
           set -e
           test "$status" -eq 1
           python3 - <<'PY'
           import json
-          with open('/tmp/launchdx-valid-dmg.json') as handle:
+          with open('/tmp/waxen-valid-dmg.json') as handle:
               report = json.load(handle)
           assert report['target']['kind'] == 'disk_image'
           assert report['container']['available'] is True
@@ -67,18 +67,18 @@ jobs:
       - name: Diagnose installer package fixture (expected unsigned blocker)
         shell: bash
         run: |
-          if [ ! -f /tmp/launchdx-fixtures/Valid.pkg ]; then
+          if [ ! -f /tmp/waxen-fixtures/Valid.pkg ]; then
             echo "Valid.pkg was not generated"
             exit 1
           fi
           set +e
-          .build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.pkg --json > /tmp/launchdx-valid-pkg.json
+          .build/release/waxen diagnose /tmp/waxen-fixtures/Valid.pkg --json > /tmp/waxen-valid-pkg.json
           status=$?
           set -e
           test "$status" -eq 1
           python3 - <<'PY'
           import json
-          with open('/tmp/launchdx-valid-pkg.json') as handle:
+          with open('/tmp/waxen-valid-pkg.json') as handle:
               report = json.load(handle)
           assert report['target']['kind'] == 'installer_package'
           assert report['container']['available'] is True
@@ -89,15 +89,15 @@ jobs:
           assert any(item in ('signature.unsigned', 'signature.invalid') for item in ids)
           PY
       - name: Action wrapper tests
-        run: sh Scripts/test-action.sh
+        run: bash Scripts/test-action.sh
       - name: Action on unsigned fixture (expect blocker)
         id: blocked
         continue-on-error: true
         uses: ./
         with:
-          path: /tmp/launchdx-fixtures/Valid.app
-          binary: ${{ github.workspace }}/.build/release/launchdx
-          report-path: /tmp/launchdx-action-valid.json
+          path: /tmp/waxen-fixtures/Valid.app
+          binary: ${{ github.workspace }}/.build/release/waxen
+          report-path: /tmp/waxen-action-valid.json
           fail-on-blocker: true
       - name: Assert action failed on blocker
         run: |
@@ -106,7 +106,7 @@ jobs:
           test "${{ steps.blocked.outputs.launch-status }}" = "blocked"
           python3 - <<'PY'
           import json
-          report = json.load(open("/tmp/launchdx-action-valid.json"))
+          report = json.load(open("/tmp/waxen-action-valid.json"))
           assert report["launchStatus"] == "blocked"
           assert any(item["id"] in ("signature.unsigned", "signature.invalid") for item in report["findings"])
           PY
@@ -114,9 +114,9 @@ jobs:
         id: recorded
         uses: ./
         with:
-          path: /tmp/launchdx-fixtures/Valid.app
-          binary: ${{ github.workspace }}/.build/release/launchdx
-          report-path: /tmp/launchdx-action-valid-nofail.json
+          path: /tmp/waxen-fixtures/Valid.app
+          binary: ${{ github.workspace }}/.build/release/waxen
+          report-path: /tmp/waxen-action-valid-nofail.json
           fail-on-blocker: false
       - name: Assert action output without job failure
         run: |

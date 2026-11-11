@@ -1,21 +1,21 @@
-# launchdx 0.2.2
+# waxen 0.2.2
 
 Read-only diagnosis of `.app`, `.dmg`, and `.pkg` on Apple Silicon macOS.
 
 ## 0.2.2
 
-1. `launchdx --version`
+1. `waxen --version`
 2. Installer-package fixture coverage
-3. GitHub Action lives in this repository: `uses: ChloeVPin/launchdx@v1`
+3. GitHub Action lives in this repository: `uses: ChloeVPin/waxen@v1`
 4. Homebrew tap tracks this tag
 
 ---
 
-# launchdx 0.2.0
+# waxen 0.2.0
 
 ## Find out why macOS rejected an application
 
-launchdx is a read only diagnostic CLI for modern Apple Silicon macOS systems. It inspects `.app` bundles and the `.dmg` / `.pkg` files developers actually download, collects evidence from public Apple APIs and Apple provided tools, and explains the most likely launch blocker.
+waxen is a read only diagnostic CLI for modern Apple Silicon macOS systems. It inspects `.app` bundles and the `.dmg` / `.pkg` files developers actually download, collects evidence from public Apple APIs and Apple provided tools, and explains the most likely launch blocker.
 
 ## Added in 0.2.0
 
@@ -28,11 +28,11 @@ The 0.1.x `.app` diagnosis path is unchanged except that diagnosis composition i
 
 ---
 
-# launchdx 0.1.0
+# waxen 0.1.0
 
 ## Find out why macOS rejected an application
 
-launchdx is a read only diagnostic CLI for modern Apple Silicon macOS systems. It inspects `.app` bundles, collects evidence from public Apple APIs and Apple provided tools, and explains the most likely launch blocker.
+waxen is a read only diagnostic CLI for modern Apple Silicon macOS systems. It inspects `.app` bundles, collects evidence from public Apple APIs and Apple provided tools, and explains the most likely launch blocker.
 
 ## Included in this release
 
@@ -73,24 +73,24 @@ These values are observations from one machine. They are not universal performan
 
 ```bash
 swift build -c release
-.build/release/launchdx diagnose /Applications/Notion.app
+.build/release/waxen diagnose /Applications/Notion.app
 ```
 
 Machine readable output:
 
 ```bash
-.build/release/launchdx diagnose /Applications/Notion.app --json
+.build/release/waxen diagnose /Applications/Notion.app --json
 ```
 
 Reproduce the benchmark:
 
 ```bash
-sh Scripts/benchmark.sh /tmp/launchdx-benchmark
+sh Scripts/benchmark.sh /tmp/waxen-benchmark
 ```
 
 ## Safety
 
-launchdx does not remove quarantine, change Gatekeeper settings, modify TCC state, disable system protections, re sign applications, install certificates, or upload inspected artifacts.
+waxen does not remove quarantine, change Gatekeeper settings, modify TCC state, disable system protections, re sign applications, install certificates, or upload inspected artifacts.
 
 ## Release artifact note
 

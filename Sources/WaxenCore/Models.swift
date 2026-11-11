@@ -587,8 +587,8 @@ public struct DiagnosticReport: Codable, Equatable {
     public let evidence: [Evidence]
 
     public init(
-        schemaVersion: String = LaunchDXVersion.schema,
-        toolVersion: String = LaunchDXVersion.current,
+        schemaVersion: String = WaxenVersion.schema,
+        toolVersion: String = WaxenVersion.current,
         target: TargetInspection,
         environment: EnvironmentInfo = .current,
         inspectionStatus: InspectionStatus,
@@ -612,7 +612,7 @@ public struct DiagnosticReport: Codable, Equatable {
         self.evidence = evidence
     }
 
-    public var exitCode: LaunchDXExitCode {
+    public var exitCode: WaxenExitCode {
         if launchStatus == .blocked {
             return .blocked
         }
@@ -632,7 +632,7 @@ public struct DiagnosticReport: Codable, Equatable {
     }
 }
 
-public enum LaunchDXExitCode: Int32, Codable {
+public enum WaxenExitCode: Int32, Codable {
     case ok = 0
     case blocked = 1
     case usage = 64
@@ -640,6 +640,7 @@ public enum LaunchDXExitCode: Int32, Codable {
     case noInput = 66
     case unavailable = 69
     case software = 70
+    case cantCreate = 73
     case noPermission = 77
     case configuration = 78
 }
@@ -647,6 +648,12 @@ public enum LaunchDXExitCode: Int32, Codable {
 public enum CLICommand: Equatable {
     case diagnose
     case evidence
+    case finder(FinderActionCommand)
+}
+
+public enum FinderActionCommand: String, Equatable {
+    case install
+    case uninstall
 }
 
 public struct CLIOptions: Equatable {
@@ -655,19 +662,31 @@ public struct CLIOptions: Equatable {
     public let json: Bool
     public let verbose: Bool
     public let noColor: Bool
+    /// Print the full evidence report instead of the verdict.
+    public let details: Bool
+    /// Print a Markdown verdict for issues and chat.
+    public let share: Bool
+    /// Show the verdict in a macOS alert (used by the Finder Quick Action).
+    public let alert: Bool
 
     public init(
         command: CLICommand,
         path: String,
         json: Bool = false,
         verbose: Bool = false,
-        noColor: Bool = false
+        noColor: Bool = false,
+        details: Bool = false,
+        share: Bool = false,
+        alert: Bool = false
     ) {
         self.command = command
         self.path = path
         self.json = json
         self.verbose = verbose
         self.noColor = noColor
+        self.details = details
+        self.share = share
+        self.alert = alert
     }
 }
 

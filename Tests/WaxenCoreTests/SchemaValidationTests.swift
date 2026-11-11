@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class SchemaValidationTests: XCTestCase {
     func testEveryReportCanBeDecodedAsTheStableReportShape() throws {
@@ -30,7 +30,7 @@ final class SchemaValidationTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(report)) as? [String: Any])
         object["unexpected"] = true
         let data = try JSONSerialization.data(withJSONObject: object)
-        let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("launchdx-invalid-\(UUID().uuidString).json")
+        let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("waxen-invalid-\(UUID().uuidString).json")
         try data.write(to: temporary)
         defer { try? FileManager.default.removeItem(at: temporary) }
 
@@ -48,7 +48,7 @@ final class SchemaValidationTests: XCTestCase {
     }
 
     private func missingPath() -> URL {
-        FileManager.default.temporaryDirectory.appendingPathComponent("launchdx-schema-\(UUID().uuidString)").appendingPathComponent("Missing.app")
+        FileManager.default.temporaryDirectory.appendingPathComponent("waxen-schema-\(UUID().uuidString)").appendingPathComponent("Missing.app")
     }
 
     private func repositoryRoot() -> URL {

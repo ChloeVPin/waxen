@@ -2,17 +2,17 @@
 
 ## Purpose
 
-The JSON report is a compatibility surface. Syntax checking the schema file alone does not prove that launchdx emits reports that satisfy it.
+The JSON report is a compatibility surface. Syntax checking the schema file alone does not prove that waxen emits reports that satisfy it.
 
 `Scripts/validate-report.py` validates an emitted report against `Schemas/diagnosis-v1.json` using Python's standard library only. It checks required properties, enumerations, primitive types, nested references, array items, minimum values, and forbidden additional properties.
 
-This validator is intentionally a CI and release tool. It is not part of the macOS executable and adds no runtime dependency to launchdx.
+This validator is intentionally a CI and release tool. It is not part of the macOS executable and adds no runtime dependency to waxen.
 
 ## Local check
 
 ```bash
 swift build -c release
-sh Scripts/test-schema.sh /tmp/launchdx-schema
+sh Scripts/test-schema.sh /tmp/waxen-schema
 ```
 
 The script validates a missing-target report and then proves that an unexpected top-level property is rejected.

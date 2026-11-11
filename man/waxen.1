@@ -1,0 +1,180 @@
+.TH WAXEN 1 "November 10, 2026" "waxen 0.3.0" "User Commands"
+.SH NAME
+waxen \- find out whether macOS is right about an app it won't open
+.SH SYNOPSIS
+.B waxen
+.I target
+.RI [ options ]
+.br
+.B waxen
+.B diagnose
+.I target
+.RI [ options ]
+.br
+.B waxen
+.B evidence
+.I target
+.RI [ options ]
+.br
+.B waxen finder
+.RB { install | uninstall }
+.SH DESCRIPTION
+.B waxen
+checks an application bundle or a download container (.dmg or .pkg) and
+answers one question in plain language: who made this app, and has anyone
+touched it since? It collects evidence from public Apple APIs and Apple
+provided tools, then prints a short verdict.
+.B \-\-details
+prints the full evidence.
+.PP
+Disk images are mounted read only. Installer packages are expanded into a
+temporary directory. The original target is never modified. waxen does not
+remove quarantine attributes, change Gatekeeper settings, modify TCC
+databases, disable system protections, re sign applications, install
+certificates, or use the network.
+.SH VERDICTS
+.TP
+.B trusted
+Signed, unchanged since signing, and accepted by macOS.
+.TP
+.B cautious
+Signed and unchanged, but not notarized, so macOS asks before opening it.
+.TP
+.B unsigned
+No developer signature, or an ad hoc placeholder. macOS cannot tell who made it.
+.TP
+.B tampered
+The contents no longer match the signature, or Apple revoked the certificate.
+.TP
+.B broken
+The app is incomplete or packaged incorrectly and cannot run.
+.TP
+.B unknown
+Not enough evidence was available to answer.
+.SH COMMANDS
+.TP
+.I target
+With no command, the same as
+.BR diagnose .
+.TP
+.B diagnose
+Print the verdict for an application bundle, disk image, or installer package.
+.TP
+.B evidence
+Show the raw evidence without a diagnosis.
+.TP
+.B finder install
+Add a Finder Quick Action named \(lqWhy Won\(cqt This Open?\(rq to
+~/Library/Services. This is the only waxen command that writes to disk.
+.TP
+.B finder uninstall
+Remove that Quick Action. waxen only removes a workflow it created.
+.SH OPTIONS
+.TP
+.B \-\-details
+Print the full report: target, environment, bundle, findings, diagnosis, and
+evidence.
+.TP
+.B \-\-verbose
+Same as
+.B \-\-details
+plus suggested repair actions.
+.TP
+.B \-\-share
+Print the verdict as Markdown for a GitHub issue or chat. Paths are reduced to
+file names.
+.TP
+.B \-\-json
+Emit a machine readable JSON report. The schema is unchanged by the verdict.
+.TP
+.B \-\-alert
+Show the verdict in a macOS alert with a Copy Report button. Used by the
+Finder Quick Action. Always exits 0.
+.TP
+.B \-\-no-color
+Disable colored output. Color is also off when output is not a terminal or
+.B NO_COLOR
+is set.
+.TP
+.B \-h, \-\-help
+Show usage information.
+.TP
+.B \-\-version, \-V
+Print the waxen version and exit.
+.SH EXIT STATUS
+.TP
+.B 0
+Inspection completed without a confirmed launch blocker.
+.TP
+.B 1
+A confirmed launch blocker was found.
+.TP
+.B 64
+Command usage error.
+.TP
+.B 65
+Target type is outside the supported .app, .dmg, and .pkg scope.
+.TP
+.B 66
+Target path does not exist.
+.TP
+.B 69
+Required security evidence is unavailable.
+.TP
+.B 70
+Internal tool error.
+.TP
+.B 73
+The Finder Quick Action could not be installed or removed.
+.TP
+.B 77
+Inspection is limited by permissions.
+.TP
+.B 78
+Host is not a supported macOS environment. The GitHub Action uses this
+when it would otherwise try to install waxen on a non-macOS runner.
+.SH EXAMPLES
+Check a download:
+.PP
+.RS
+.nf
+waxen ~/Downloads/MyApp.dmg
+.fi
+.RE
+.PP
+Paste the result into a bug report:
+.PP
+.RS
+.nf
+waxen ~/Downloads/MyApp.dmg --share | pbcopy
+.fi
+.RE
+.PP
+See all of the evidence:
+.PP
+.RS
+.nf
+waxen /Applications/MyApp.app --details
+.fi
+.RE
+.PP
+Add the Finder right-click action:
+.PP
+.RS
+.nf
+waxen finder install
+.fi
+.RE
+.SH SUPPORTED PLATFORM
+macOS 13 or newer. Application bundles (.app), disk images (.dmg), and
+installer packages (.pkg) are supported. ZIP archives remain outside the
+current scope.
+.SH SEE ALSO
+.BR codesign (1),
+.BR spctl (8),
+.BR stapler (1),
+.BR xattr (1)
+.SH AUTHOR
+waxen contributors
+.SH LICENSE
+MIT

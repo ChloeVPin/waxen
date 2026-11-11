@@ -2,7 +2,8 @@
 
 ## Repository quality
 
-1. Confirm the version in `Sources/LaunchDXCore/Version.swift`, `man/launchdx.1`, and the Homebrew formula.
+1. Confirm the version in `Sources/WaxenCore/Version.swift`, `man/waxen.1`, and the Homebrew formula.
+1a. Make sure the Homebrew formula has a `caveats` block that points to the Finder Quick Action: `Right-click apps in Finder: waxen finder install`.
 2. Update `CHANGELOG.md`.
 3. Confirm `LICENSE`, `SECURITY.md`, and `CONTRIBUTING.md`.
 4. Validate Markdown for broken links and unsupported characters.
@@ -20,13 +21,13 @@ python3 -m json.tool Schemas/diagnosis-v1.json >/dev/null
 ## Fixture validation
 
 ```bash
-rm -rf /tmp/launchdx-fixtures
-sh Scripts/make-fixtures.sh /tmp/launchdx-fixtures
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.app --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/MissingExecutable.app --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/BrokenBundle.app --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.dmg --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.pkg --json
+rm -rf /tmp/waxen-fixtures
+sh Scripts/make-fixtures.sh /tmp/waxen-fixtures
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.app --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/MissingExecutable.app --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/BrokenBundle.app --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.dmg --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.pkg --json
 ```
 
 Expected fixture behavior:
@@ -50,8 +51,8 @@ For each artifact, record:
 5. Native `xcrun stapler validate` result
 6. Native `spctl --assess --type execute --verbose=4 --ignore-cache` result
 7. Native quarantine state
-8. launchdx JSON report
-9. launchdx exit code
+8. waxen JSON report
+9. waxen exit code
 10. Wall clock time and nested object count
 
 Required adversarial copies:
@@ -83,7 +84,7 @@ The reproducible harness is:
 
 ```bash
 swift build -c release
-sh Scripts/benchmark.sh /tmp/launchdx-benchmark
+sh Scripts/benchmark.sh /tmp/waxen-benchmark
 ```
 
 Investigate any timeout, malformed JSON, leaked child process, or result that differs from native Apple tools without an explanation.

@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class MachOInspectorTests: XCTestCase {
     private let inspector = MachOInspector()
@@ -82,7 +82,7 @@ final class MachOInspectorTests: XCTestCase {
     }
 
     func testUnreadablePathIsUnavailable() {
-        let result = inspector.inspect(path: "/definitely/missing/launchdx-executable")
+        let result = inspector.inspect(path: "/definitely/missing/waxen-executable")
 
         XCTAssertFalse(result.isReadable)
         XCTAssertFalse(result.isMachO)

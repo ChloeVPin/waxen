@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 OUTPUT_DIR=${1:-"$ROOT/.build/integration-fixtures"}
-LAUNCHDX=${LAUNCHDX_BIN:-"$ROOT/.build/release/launchdx"}
+WAXEN=${WAXEN_BIN:-"$ROOT/.build/release/waxen"}
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "real macOS integration tests require macOS" >&2
@@ -16,7 +16,7 @@ fi
 for tool in clang codesign spctl xattr plutil; do
   command -v "$tool" >/dev/null || { echo "missing required tool: $tool" >&2; exit 69; }
 done
-[[ -x "$LAUNCHDX" ]] || { echo "missing launchdx binary: $LAUNCHDX" >&2; exit 69; }
+[[ -x "$WAXEN" ]] || { echo "missing waxen binary: $WAXEN" >&2; exit 69; }
 
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
@@ -30,7 +30,7 @@ make_app() {
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>dev.launchdx.integration.${name}</string>
+<key>CFBundleIdentifier</key><string>dev.waxen.integration.${name}</string>
 <key>CFBundleExecutable</key><string>${name}</string>
 <key>CFBundleName</key><string>${name}</string>
 <key>CFBundlePackageType</key><string>APPL</string>
@@ -38,7 +38,7 @@ make_app() {
 PLIST
   cat > "$OUTPUT_DIR/${name}.c" <<'C'
 #include <stdio.h>
-int main(void) { puts("launchdx integration fixture"); return 0; }
+int main(void) { puts("waxen integration fixture"); return 0; }
 C
   clang -arch arm64 -mmacosx-version-min=13.0 "$OUTPUT_DIR/${name}.c" -o "$app/Contents/MacOS/$name"
   chmod 755 "$app/Contents/MacOS/$name"
@@ -49,7 +49,7 @@ run_report() {
   local app="$1"
   local output="$2"
   set +e
-  "$LAUNCHDX" diagnose "$app" --json > "$output"
+  "$WAXEN" diagnose "$app" --json > "$output"
   local status=$?
   set -e
   python3 "$ROOT/Scripts/validate-report.py" "$output" >/dev/null
@@ -70,7 +70,7 @@ chmod 755 "$OUTPUT_DIR/NestedUnsigned.app/Contents/Helpers/UnsignedHelper.app/Co
 cat > "$OUTPUT_DIR/NestedUnsigned.app/Contents/Helpers/UnsignedHelper.app/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>dev.launchdx.integration.unsigned-helper</string>
+<key>CFBundleIdentifier</key><string>dev.waxen.integration.unsigned-helper</string>
 <key>CFBundleExecutable</key><string>UnsignedHelper</string>
 </dict></plist>
 PLIST
@@ -78,20 +78,20 @@ codesign --force --sign - --timestamp=none "$OUTPUT_DIR/NestedUnsigned.app/Conte
 codesign --force --sign - --timestamp=none "$OUTPUT_DIR/NestedUnsigned.app" >/dev/null
 rm -rf "$OUTPUT_DIR/NestedUnsigned.app/Contents/Helpers/UnsignedHelper.app/Contents/_CodeSignature"
 
-xattr -w com.apple.quarantine '0083;00000000;launchdx.integration;00000000-0000-0000-0000-000000000001' "$OUTPUT_DIR/Modified.app"
+xattr -w com.apple.quarantine '0083;00000000;waxen.integration;00000000-0000-0000-0000-000000000001' "$OUTPUT_DIR/Modified.app"
 
 if command -v hdiutil >/dev/null 2>&1; then
   mkdir -p "$OUTPUT_DIR/dmg-src"
   cp -R "$OUTPUT_DIR/AdHoc.app" "$OUTPUT_DIR/dmg-src/AdHoc.app"
   rm -f "$OUTPUT_DIR/AdHoc.dmg"
-  hdiutil create -volname LaunchDXAdHoc -srcfolder "$OUTPUT_DIR/dmg-src" -ov -format UDZO "$OUTPUT_DIR/AdHoc.dmg" >/dev/null
+  hdiutil create -volname WaxenAdHoc -srcfolder "$OUTPUT_DIR/dmg-src" -ov -format UDZO "$OUTPUT_DIR/AdHoc.dmg" >/dev/null
 fi
 
 if command -v pkgbuild >/dev/null 2>&1; then
   mkdir -p "$OUTPUT_DIR/pkg-root"
   cp -R "$OUTPUT_DIR/AdHoc.app" "$OUTPUT_DIR/pkg-root/AdHoc.app"
   rm -f "$OUTPUT_DIR/AdHoc.pkg"
-  pkgbuild --root "$OUTPUT_DIR/pkg-root" --identifier "dev.launchdx.integration.adhoc" --version "0.0.1" "$OUTPUT_DIR/AdHoc.pkg" >/dev/null
+  pkgbuild --root "$OUTPUT_DIR/pkg-root" --identifier "dev.waxen.integration.adhoc" --version "0.0.1" "$OUTPUT_DIR/AdHoc.pkg" >/dev/null
 fi
 
 codesign --verify --strict --verbose=2 "$OUTPUT_DIR/AdHoc.app" >/dev/null

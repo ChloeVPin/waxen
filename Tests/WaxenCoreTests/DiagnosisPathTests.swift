@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class DiagnosisPathTests: XCTestCase {
     private var temporaryDirectories: [URL] = []
@@ -126,7 +126,7 @@ final class DiagnosisPathTests: XCTestCase {
         XCTAssertTrue(report.findings.contains { $0.id == "container.app-found" })
         XCTAssertNotNil(report.container?.nestedApplicationPath)
         XCTAssertTrue(report.container?.nestedApplicationPath?.hasSuffix("Contained.app") == true)
-        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.launchdx.contained")
+        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.waxen.contained")
         XCTAssertEqual(report.launchStatus, .blocked)
         XCTAssertEqual(report.exitCode, .blocked)
         let ids = report.findings.map(\.id)
@@ -157,7 +157,7 @@ final class DiagnosisPathTests: XCTestCase {
         XCTAssertTrue(report.findings.contains { $0.id == "container.expanded" })
         XCTAssertTrue(report.findings.contains { $0.id == "container.app-found" })
         XCTAssertTrue(report.container?.nestedApplicationPath?.hasSuffix("Packaged.app") == true)
-        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.launchdx.packaged")
+        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.waxen.packaged")
         XCTAssertEqual(report.launchStatus, .blocked)
         XCTAssertEqual(report.exitCode, .blocked)
         let ids = report.findings.map(\.id)
@@ -198,7 +198,7 @@ final class DiagnosisPathTests: XCTestCase {
         process.executableURL = URL(fileURLWithPath: "/usr/bin/hdiutil")
         process.arguments = [
             "create",
-            "-volname", "LaunchDXFixture",
+            "-volname", "WaxenFixture",
             "-srcfolder", src.path,
             "-ov",
             "-format", "UDZO",
@@ -225,7 +225,7 @@ final class DiagnosisPathTests: XCTestCase {
         process.executableURL = URL(fileURLWithPath: "/usr/bin/pkgbuild")
         process.arguments = [
             "--root", payload.path,
-            "--identifier", "dev.launchdx.pkgfixture",
+            "--identifier", "dev.waxen.pkgfixture",
             "--version", "0.0.1",
             pkg.path
         ]
@@ -243,7 +243,7 @@ final class DiagnosisPathTests: XCTestCase {
 
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("launchdx-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("waxen-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         temporaryDirectories.append(root)
         return root
@@ -253,7 +253,7 @@ final class DiagnosisPathTests: XCTestCase {
         let app = try makeRoot().appendingPathComponent(name, isDirectory: true)
         let macOS = app.appendingPathComponent("Contents/MacOS", isDirectory: true)
         try FileManager.default.createDirectory(at: macOS, withIntermediateDirectories: true)
-        let identifier = "dev.launchdx.\(executable.lowercased())"
+        let identifier = "dev.waxen.\(executable.lowercased())"
         let plist: [String: String] = [
             "CFBundleIdentifier": identifier,
             "CFBundleExecutable": executable

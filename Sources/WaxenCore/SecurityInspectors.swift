@@ -362,7 +362,7 @@ struct SignatureInspector {
                 severity: .error,
                 confidence: .low,
                 title: "Some nested code could not be inspected",
-                explanation: "launchdx could not obtain signing evidence for every discovered nested code object.",
+                explanation: "waxen could not obtain signing evidence for every discovered nested code object.",
                 evidenceReferences: refs
             ))
         }
@@ -742,7 +742,7 @@ struct QuarantineInspector {
             return (
                 inspection,
                 [evidence],
-                [Finding(id: "quarantine.malformed", status: .inconclusive, severity: .warning, confidence: .low, title: "Quarantine metadata is malformed", explanation: "The com.apple.quarantine attribute exists, but its value does not match the expected four-field format. launchdx cannot safely infer the original download context.", evidenceReferences: [evidence.id])]
+                [Finding(id: "quarantine.malformed", status: .inconclusive, severity: .warning, confidence: .low, title: "Quarantine metadata is malformed", explanation: "The com.apple.quarantine attribute exists, but its value does not match the expected four-field format. waxen cannot safely infer the original download context.", evidenceReferences: [evidence.id])]
             )
         }
         return (

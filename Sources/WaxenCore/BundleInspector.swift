@@ -91,7 +91,7 @@ public final class BundleInspector {
                 severity: .error,
                 confidence: .confirmed,
                 title: "Target was not found",
-                explanation: "launchdx could not inspect the requested path because it does not exist.",
+                explanation: "waxen could not inspect the requested path because it does not exist.",
                 evidenceReferences: ["target.missing"],
                 suggestedActions: [SuggestedAction(
                     id: "target.check-path",
@@ -128,7 +128,7 @@ public final class BundleInspector {
                 severity: .error,
                 confidence: .confirmed,
                 title: "Target is not readable",
-                explanation: "launchdx could not inspect the target with the current permissions.",
+                explanation: "waxen could not inspect the target with the current permissions.",
                 evidenceReferences: ["target.unreadable"],
                 suggestedActions: [SuggestedAction(
                     id: "target.check-permissions",
@@ -169,7 +169,7 @@ public final class BundleInspector {
                 severity: .error,
                 confidence: .confirmed,
                 title: "Target is not a supported application artifact",
-                explanation: "launchdx accepts .app bundle directories, .dmg disk images, and .pkg installer packages.",
+                explanation: "waxen accepts .app bundle directories, .dmg disk images, and .pkg installer packages.",
                 evidenceReferences: ["target.not-app"],
                 suggestedActions: [SuggestedAction(
                     id: "target.choose-app",
@@ -322,7 +322,7 @@ public final class BundleInspector {
                 severity: .error,
                 confidence: .confirmed,
                 title: "Info.plist is not readable",
-                explanation: "launchdx could not inspect the bundle metadata with the current permissions.",
+                explanation: "waxen could not inspect the bundle metadata with the current permissions.",
                 evidenceReferences: ["bundle.info-plist-unreadable"],
                 suggestedActions: [SuggestedAction(
                     id: "bundle.check-permissions",
@@ -452,7 +452,7 @@ public final class BundleInspector {
                         severity: .error,
                         confidence: .confirmed,
                         title: "Info.plist is not readable",
-                        explanation: "launchdx could not read the bundle metadata with the current permissions or filesystem state.",
+                        explanation: "waxen could not read the bundle metadata with the current permissions or filesystem state.",
                         evidenceReferences: ["bundle.info-plist-unreadable"],
                         suggestedActions: [SuggestedAction(
                             id: "bundle.check-permissions",
@@ -543,7 +543,7 @@ public final class BundleInspector {
                     severity: .error,
                     confidence: .confirmed,
                     title: "Main executable is not readable",
-                    explanation: "The main executable exists, but launchdx cannot read it with the current permissions.",
+                    explanation: "The main executable exists, but waxen cannot read it with the current permissions.",
                     evidenceReferences: ["bundle.executable-present"],
                     suggestedActions: [SuggestedAction(
                         id: "bundle.check-executable-permissions",
@@ -569,7 +569,7 @@ public final class BundleInspector {
                         severity: .error,
                         confidence: .confirmed,
                         title: "Main executable could not be read",
-                        explanation: macho.error ?? "launchdx could not read the executable with the current permissions or filesystem state.",
+                        explanation: macho.error ?? "waxen could not read the executable with the current permissions or filesystem state.",
                         evidenceReferences: ["macho.unreadable"],
                         suggestedActions: [SuggestedAction(
                             id: "macho.check-permissions",
@@ -615,7 +615,7 @@ public final class BundleInspector {
                         confidence: .high,
                         title: "Main executable does not contain arm64",
                         explanation: macho.supportsX86_64
-                            ? "The executable is x86_64-only. It may run through Rosetta 2, but launchdx has not verified Rosetta availability."
+                            ? "The executable is x86_64-only. It may run through Rosetta 2, but waxen has not verified Rosetta availability."
                             : "The executable does not contain an arm64 slice required for native Apple Silicon execution.",
                         evidenceReferences: ["macho.inspection"],
                         suggestedActions: [SuggestedAction(

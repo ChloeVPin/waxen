@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://launchdx.dev/schema/diagnosis/v1",
-  "title": "launchdx diagnosis report",
+  "$id": "https://github.com/ChloeVPin/waxen/blob/main/Schemas/diagnosis-v1.json",
+  "title": "waxen diagnosis report",
   "type": "object",
   "required": [
     "schemaVersion",

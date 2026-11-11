@@ -1,12 +1,12 @@
 # Architecture
 
-This file is for people changing the code. It describes how launchdx is put together.
+This file is for people changing the code. It describes how waxen is put together.
 
 The short version: the tool first collects facts, then decides what those facts mean, then prints a report. Those three steps stay separate so a wording change cannot silently change a diagnosis.
 
 ## Design goals
 
-launchdx separates evidence collection from diagnosis and presentation.
+waxen separates evidence collection from diagnosis and presentation.
 
 The implementation must satisfy five rules:
 
@@ -95,12 +95,29 @@ A confirmed blocker requires a failed finding with blocker severity. Quarantine 
 
 `ReportRenderer` supports:
 
-1. Normal terminal output
-2. Verbose suggested actions
+1. The verdict (default)
+2. Full terminal output (`--details`) and verbose suggested actions
 3. Evidence only output
 4. JSON output with sorted keys
 
 The renderer does not change findings or diagnosis semantics.
+
+### 9. Verdict
+
+`VerdictBuilder` turns a finished report into one plain-language answer: `trusted`, `cautious`, `unsigned`, `tampered`, `broken`, or `unknown`. It reads the report and never changes it. The rules, in order:
+
+1. Revoked certificate, or `signature.invalid` / `signature.nested-invalid` with evidence the app was signed: `tampered`
+2. A structural blocker (`bundle.*`, `macho.*`, `container.*`), or an invalid signature with no sign the app was ever signed: `broken`
+3. Unsigned or ad hoc main code: `unsigned`
+4. `signature.nested-unsigned` or `signature.team-id-mismatch`: `broken`
+5. Valid signature and a valid ticket, but Gatekeeper rejected it anyway: `unknown` (waxen says it can't tell why)
+6. Valid signature, no valid ticket, and Gatekeeper rejected it or it is quarantined: `cautious`
+7. `launchStatus == clean`: `trusted`
+8. Otherwise: `unknown`
+
+The verdict is the default text output, the `--share` Markdown, and the `--alert` dialog. It is not part of the JSON schema. Adding it there would be a schema version decision.
+
+User steps only describe paths Apple supports, such as Open Anyway in Privacy & Security. They never suggest removing quarantine.
 
 ## Public data model
 

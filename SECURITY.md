@@ -1,6 +1,8 @@
 # Security Policy
 
-launchdx only inspects files. It must never remove quarantine, change Gatekeeper, edit privacy databases, disable system protections, install certificates, re-sign apps, or upload what you point it at.
+waxen only inspects files. It must never remove quarantine, change Gatekeeper, edit privacy databases, disable system protections, install certificates, re-sign apps, or upload what you point it at.
+
+The one exception is `waxen finder install`, which you run on purpose. It writes a single Quick Action to `~/Library/Services/Why Won't This Open.workflow` and turns on that one entry in the Services settings (`pbs` preferences), so Finder shows it under Quick Actions. `waxen finder uninstall` removes both, and only if waxen created the workflow. The Quick Action passes report text to `osascript` as arguments, never as script source, so a file name can't run code.
 
 ## Report a vulnerability
 
@@ -19,7 +21,7 @@ Strip personal paths, signing identities, certificate material, private source, 
 
 ## Safe testing
 
-Work on copies. Do not turn Gatekeeper off, disable system protections, strip quarantine from production files, change TCC, or launch unknown apps in order to test launchdx.
+Work on copies. Do not turn Gatekeeper off, disable system protections, strip quarantine from production files, change TCC, or launch unknown apps in order to test waxen.
 
 ## Limits
 

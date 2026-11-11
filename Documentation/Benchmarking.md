@@ -2,12 +2,12 @@
 
 ## Purpose
 
-launchdx is an evidence collector. Performance matters because a diagnosis should be practical during development, but speed must not be claimed without measurements.
+waxen is an evidence collector. Performance matters because a diagnosis should be practical during development, but speed must not be claimed without measurements.
 
 The benchmark measures process wall clock time for the complete command:
 
 ```bash
-launchdx diagnose TARGET.app --json
+waxen diagnose TARGET.app --json
 ```
 
 The measurement includes bundle inspection, Mach O parsing, nested code checks, signing evidence, stapled ticket validation, Gatekeeper assessment, quarantine inspection, JSON encoding, and process startup.
@@ -18,7 +18,7 @@ Build once, then run the harness:
 
 ```bash
 swift build -c release
-sh Scripts/benchmark.sh /tmp/launchdx-benchmark
+sh Scripts/benchmark.sh /tmp/waxen-benchmark
 ```
 
 The harness creates disposable parser fixtures with zero or 5,000 resource files and zero, ten, or fifty nested framework containers. On a matching machine it also measures selected installed applications when they exist.
@@ -41,7 +41,7 @@ These observations were collected on an arm64 Mac with Apple Swift 6.4 and macOS
 
 ## Interpretation
 
-1. Resource file count alone did not dominate these runs because launchdx does not independently hash every resource file. Apple signing and policy tools remain the authoritative sources for sealed resource validation.
+1. Resource file count alone did not dominate these runs because waxen does not independently hash every resource file. Apple signing and policy tools remain the authoritative sources for sealed resource validation.
 2. Nested code count is the main controlled cost in the current MVP.
 3. Real applications vary widely because Apple tools may consult policy services, examine signatures, and access system caches.
 4. Gatekeeper assessment may be slower or unavailable depending on system policy services and the target artifact.

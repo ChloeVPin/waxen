@@ -1,17 +1,41 @@
 # Changelog
 
-All notable changes to launchdx are documented here.
+All notable changes to waxen are documented here.
+
+## 0.3.0
+
+The default output is now a short plain-language verdict. `--details` prints the full report.
+
+### Rebrand
+
+Renamed the project, executable, Swift modules, and GitHub repository to Waxen. Update Action references to `ChloeVPin/waxen`; GitHub does not redirect Action calls from renamed repositories. Homebrew distribution is pending; build from source for now.
+
+### Added
+
+1. A verdict as the default output: one of `trusted`, `cautious`, `unsigned`, `tampered`, `broken`, or `unknown`, with who signed the app, whether Apple checked it, and where it was downloaded from
+2. `waxen <path>` works without a subcommand
+3. `--details` prints the full report that `diagnose` used to print
+4. `--share` prints a Markdown verdict for bug reports, with file names but no folder paths
+5. `waxen finder install` / `uninstall` adds or removes a Finder Quick Action, "Why Won’t This Open?", that shows the verdict in a native alert
+6. The GitHub Action writes the verdict to the job summary and exposes a `verdict` output
+7. Exit code `73` when the Quick Action can't be written
+
+### Changed
+
+1. `diagnose` text output is the verdict. Use `--details` (or `--verbose`) for the old report. JSON output and exit codes are unchanged
+2. Color is used only when stdout is a terminal and `NO_COLOR` is unset
+3. The GitHub Action passes `--details` when `json: false`, so text reports stay complete
 
 ## 0.2.2
 
 ### Added
 
-1. `launchdx --version` and `-V`
+1. `waxen --version` and `-V`
 2. Generated `.pkg` fixture plus diagnosis-path, CI, and integration coverage for installer packages
 
 ### Changed
 
-1. The GitHub Action lives only in this repository. Use `ChloeVPin/launchdx@v1`
+1. The GitHub Action lives only in this repository. Use `ChloeVPin/waxen@main`
 2. Homebrew tap, man page, and CLI version are aligned at 0.2.2
 3. Bash completion offers flags after `diagnose` / `evidence`
 
@@ -19,8 +43,8 @@ All notable changes to launchdx are documented here.
 
 ### Added
 
-1. GitHub Action that runs `launchdx diagnose` on a `.app`, `.dmg`, or `.pkg` and fails the job on a confirmed blocker
-2. One-line CI snippet: `uses: ChloeVPin/launchdx@v1`
+1. GitHub Action that runs `waxen diagnose` on a `.app`, `.dmg`, or `.pkg` and fails the job on a confirmed blocker
+2. One-line CI snippet: `uses: ChloeVPin/waxen@main`
 
 ## 0.2.0
 
@@ -41,10 +65,10 @@ All notable changes to launchdx are documented here.
 
 ### Added
 
-1. Bash completion script in `completions/launchdx.bash`
-2. Zsh completion script in `completions/_launchdx`
-3. Fish completion script in `completions/launchdx.fish`
-4. Man page in `man/launchdx.1`
+1. Bash completion script in `completions/waxen.bash`
+2. Zsh completion script in `completions/_waxen`
+3. Fish completion script in `completions/waxen.fish`
+4. Man page in `man/waxen.1`
 5. Homebrew formula installs completions and the man page
 
 ## 0.1.0

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small dependency-free validator for the JSON Schema subset used by launchdx."""
+"""Small dependency-free validator for the JSON Schema subset used by waxen."""
 
 from __future__ import annotations
 

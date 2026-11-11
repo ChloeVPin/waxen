@@ -45,7 +45,7 @@ final class ContainerInspector {
     #if os(macOS)
     private func unpackDiskImage(path: String) -> ContainerUnpackResult {
         let workRoot = fileManager.temporaryDirectory
-            .appendingPathComponent("launchdx-dmg-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("waxen-dmg-\(UUID().uuidString)", isDirectory: true)
         let mountPoint = workRoot.appendingPathComponent("volume", isDirectory: true)
         do {
             try fileManager.createDirectory(at: mountPoint, withIntermediateDirectories: true)
@@ -100,7 +100,7 @@ final class ContainerInspector {
                     severity: .error,
                     confidence: .low,
                     title: "Disk image could not be mounted",
-                    explanation: "launchdx mounts disk images read-only with hdiutil and does not modify the original file. \(detail)",
+                    explanation: "waxen mounts disk images read-only with hdiutil and does not modify the original file. \(detail)",
                     evidenceReferences: ["container.unavailable"]
                 )],
                 cleanup: {}
@@ -130,7 +130,7 @@ final class ContainerInspector {
 
     private func unpackInstallerPackage(path: String) -> ContainerUnpackResult {
         let workRoot = fileManager.temporaryDirectory
-            .appendingPathComponent("launchdx-pkg-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("waxen-pkg-\(UUID().uuidString)", isDirectory: true)
         do {
             try fileManager.createDirectory(at: workRoot, withIntermediateDirectories: true)
         } catch {
@@ -183,7 +183,7 @@ final class ContainerInspector {
                         severity: .error,
                         confidence: .low,
                         title: "Installer package could not be expanded",
-                        explanation: "launchdx expands installer packages into a temporary directory and does not modify the original file. \(detail)",
+                        explanation: "waxen expands installer packages into a temporary directory and does not modify the original file. \(detail)",
                         evidenceReferences: ["container.unavailable"]
                     )],
                     cleanup: {}
@@ -230,7 +230,7 @@ final class ContainerInspector {
                     arguments: [
                         "-c",
                         "gzip -dc \"$1\" | (cd \"$2\" && cpio -id --quiet)" ,
-                        "launchdx-payload",
+                        "waxen-payload",
                         item.path,
                         dest.path
                     ],
@@ -284,12 +284,12 @@ final class ContainerInspector {
                 severity: .error,
                 confidence: .confirmed,
                 title: "Container does not contain an application",
-                explanation: "The disk image or installer package was opened read-only, but launchdx could not find a nested .app bundle to diagnose.",
+                explanation: "The disk image or installer package was opened read-only, but waxen could not find a nested .app bundle to diagnose.",
                 evidenceReferences: ["container.no-app"],
                 suggestedActions: [SuggestedAction(
                     id: "container.choose-app",
-                    title: "Point launchdx at the application",
-                    detail: "If the product is not an application bundle, this container is outside launchdx scope. If the app is elsewhere, pass that .app path directly."
+                    title: "Point waxen at the application",
+                    detail: "If the product is not an application bundle, this container is outside waxen scope. If the app is elsewhere, pass that .app path directly."
                 )]
             ))
             return ContainerUnpackResult(
@@ -321,7 +321,7 @@ final class ContainerInspector {
                 severity: .warning,
                 confidence: .high,
                 title: "Container contains more than one application",
-                explanation: "launchdx diagnosed \(chosen.lastPathComponent) as the primary nested application. Other bundles were recorded as evidence and were not separately diagnosed.",
+                explanation: "waxen diagnosed \(chosen.lastPathComponent) as the primary nested application. Other bundles were recorded as evidence and were not separately diagnosed.",
                 evidenceReferences: ["container.multiple-apps"]
             ))
         }

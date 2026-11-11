@@ -27,14 +27,14 @@ for tool in swift security codesign xcrun hdiutil shasum; do
   command -v "$tool" >/dev/null || { echo "missing required release tool: $tool" >&2; exit 69; }
 done
 
-KEYCHAIN="$RUNNER_TEMP/launchdx-build.keychain-db"
-ORIGINAL_KEYCHAINS="$RUNNER_TEMP/launchdx-original-keychains.txt"
+KEYCHAIN="$RUNNER_TEMP/waxen-build.keychain-db"
+ORIGINAL_KEYCHAINS="$RUNNER_TEMP/waxen-original-keychains.txt"
 ORIGINAL_KEYCHAIN_ARGS=()
-CERTIFICATE="$RUNNER_TEMP/launchdx-developer-id.p12"
+CERTIFICATE="$RUNNER_TEMP/waxen-developer-id.p12"
 API_KEY="$RUNNER_TEMP/AuthKey_${API_KEY_ID}.p8"
-STAGING="$RUNNER_TEMP/launchdx-staging"
-DMG="$OUTPUT_DIR/launchdx-${GITHUB_REF_NAME:-local}.dmg"
-ZIP="$OUTPUT_DIR/launchdx-${GITHUB_REF_NAME:-local}.zip"
+STAGING="$RUNNER_TEMP/waxen-staging"
+DMG="$OUTPUT_DIR/waxen-${GITHUB_REF_NAME:-local}.dmg"
+ZIP="$OUTPUT_DIR/waxen-${GITHUB_REF_NAME:-local}.zip"
 
 cleanup() {
   if [[ ${#ORIGINAL_KEYCHAIN_ARGS[@]} -gt 0 ]]; then
@@ -63,15 +63,15 @@ security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD"
 security list-keychains -d user -s "$KEYCHAIN"
 
 swift build -c release
-cp "$ROOT/.build/arm64-apple-macosx/release/launchdx" "$STAGING/bin/launchdx"
-codesign --force --options runtime --timestamp --sign "$IDENTITY" "$STAGING/bin/launchdx"
-codesign --verify --strict --verbose=4 "$STAGING/bin/launchdx"
+cp "$ROOT/.build/arm64-apple-macosx/release/waxen" "$STAGING/bin/waxen"
+codesign --force --options runtime --timestamp --sign "$IDENTITY" "$STAGING/bin/waxen"
+codesign --verify --strict --verbose=4 "$STAGING/bin/waxen"
 
 cat > "$STAGING/README.txt" <<'EOF'
-launchdx is a read-only macOS application launch diagnostic tool.
-Run bin/launchdx diagnose /path/to/MyApp.app
+waxen is a read-only macOS application launch diagnostic tool.
+Run bin/waxen diagnose /path/to/MyApp.app
 EOF
-hdiutil create -volname launchdx -srcfolder "$STAGING" -ov -format UDZO "$DMG" >/dev/null
+hdiutil create -volname waxen -srcfolder "$STAGING" -ov -format UDZO "$DMG" >/dev/null
 xcrun notarytool submit "$DMG" --key-id "$API_KEY_ID" --issuer "$API_ISSUER_ID" --key "$API_KEY" --wait
 xcrun stapler staple "$DMG"
 xcrun stapler validate "$DMG"

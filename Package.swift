@@ -2,25 +2,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "launchdx",
+    name: "waxen",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "launchdx", targets: ["launchdx"]),
-        .library(name: "LaunchDXCore", targets: ["LaunchDXCore"])
+        .executable(name: "waxen", targets: ["waxen"]),
+        .library(name: "WaxenCore", targets: ["WaxenCore"])
     ],
     targets: [
         .target(
-            name: "LaunchDXCore"
+            name: "WaxenCore"
         ),
         .executableTarget(
-            name: "launchdx",
-            dependencies: ["LaunchDXCore"]
+            name: "waxen",
+            dependencies: ["WaxenCore"]
         ),
         .testTarget(
-            name: "LaunchDXCoreTests",
-            dependencies: ["LaunchDXCore"]
+            name: "WaxenCoreTests",
+            dependencies: ["WaxenCore"]
         )
     ]
 )

@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class SecurityInspectorsTests: XCTestCase {
     func testNonMacOSFallbacksAreUnavailableOrPortable() {

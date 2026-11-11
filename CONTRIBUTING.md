@@ -15,16 +15,16 @@ You can compile parser tests on Linux. Those builds cannot collect real signing,
 swift test
 swift build -c release
 python3 -m json.tool Schemas/diagnosis-v1.json >/dev/null
-sh Scripts/test-action.sh
+bash Scripts/test-action.sh
 ```
 
 Generated fixtures (unsigned on purpose):
 
 ```bash
-sh Scripts/make-fixtures.sh /tmp/launchdx-fixtures
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.app --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.dmg --json
-.build/release/launchdx diagnose /tmp/launchdx-fixtures/Valid.pkg --json
+sh Scripts/make-fixtures.sh /tmp/waxen-fixtures
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.app --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.dmg --json
+.build/release/waxen diagnose /tmp/waxen-fixtures/Valid.pkg --json
 ```
 
 If you change how macOS security evidence is collected, also run Apple’s own tools on *copies* of real apps: `codesign`, `spctl`, `xcrun stapler`, and `xattr`. Do not modify an installed original.

@@ -1,5 +1,5 @@
 import XCTest
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class CLIParserTests: XCTestCase {
     private let parser = CLIParser()
@@ -75,5 +75,46 @@ final class CLIParserTests: XCTestCase {
         let pkg = try parser.parse(["evidence", "MyApp.pkg"])
         XCTAssertEqual(pkg.command, .evidence)
         XCTAssertEqual(pkg.path, "MyApp.pkg")
+    }
+
+    func testBarePathMeansDiagnose() throws {
+        let options = try parser.parse(["MyApp.dmg"])
+        XCTAssertEqual(options.command, .diagnose)
+        XCTAssertEqual(options.path, "MyApp.dmg")
+        XCTAssertFalse(options.details)
+    }
+
+    func testOptionsBeforeBarePath() throws {
+        let options = try parser.parse(["--share", "MyApp.app"])
+        XCTAssertEqual(options.command, .diagnose)
+        XCTAssertTrue(options.share)
+        XCTAssertEqual(options.path, "MyApp.app")
+    }
+
+    func testNewFlagsParse() throws {
+        let options = try parser.parse(["MyApp.app", "--details", "--share", "--alert"])
+        XCTAssertTrue(options.details)
+        XCTAssertTrue(options.share)
+        XCTAssertTrue(options.alert)
+    }
+
+    func testBarePathStillRejectsUnknownOptions() {
+        XCTAssertThrowsError(try parser.parse(["MyApp.app", "--wat"])) { error in
+            XCTAssertEqual(error as? CLIParseError, .unknownOption("--wat"))
+        }
+    }
+
+    func testFinderCommands() throws {
+        XCTAssertEqual(try parser.parse(["finder", "install"]).command, .finder(.install))
+        XCTAssertEqual(try parser.parse(["finder", "uninstall"]).command, .finder(.uninstall))
+        XCTAssertThrowsError(try parser.parse(["finder"])) { error in
+            XCTAssertEqual(error as? CLIParseError, .missingFinderAction)
+        }
+        XCTAssertThrowsError(try parser.parse(["finder", "explode"])) { error in
+            XCTAssertEqual(error as? CLIParseError, .unknownCommand("finder explode"))
+        }
+        XCTAssertThrowsError(try parser.parse(["finder", "install", "--json"])) { error in
+            XCTAssertEqual(error as? CLIParseError, .unknownOption("--json"))
+        }
     }
 }

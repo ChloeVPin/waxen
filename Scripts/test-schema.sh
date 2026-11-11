@@ -6,7 +6,7 @@ OUTPUT_DIR=${1:-"$ROOT/.build/schema-fixtures"}
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-"$ROOT/.build/release/launchdx" diagnose "$OUTPUT_DIR/Missing.app" --json > "$OUTPUT_DIR/valid.json" || status=$?
+"$ROOT/.build/release/waxen" diagnose "$OUTPUT_DIR/Missing.app" --json > "$OUTPUT_DIR/valid.json" || status=$?
 status=${status:-0}
 test "$status" -eq 66
 python3 "$ROOT/Scripts/validate-report.py" "$OUTPUT_DIR/valid.json"

@@ -3,7 +3,7 @@ import XCTest
 #if os(macOS)
 import Darwin
 #endif
-@testable import LaunchDXCore
+@testable import WaxenCore
 
 final class BundleInspectorTests: XCTestCase {
     private var temporaryDirectories: [URL] = []
@@ -20,7 +20,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "Valid.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.valid",
+                "CFBundleIdentifier": "dev.waxen.valid",
                 "CFBundleExecutable": "Valid"
             ],
             executable: "Valid"
@@ -30,7 +30,7 @@ final class BundleInspectorTests: XCTestCase {
 
         XCTAssertEqual(report.inspectionStatus, .complete)
         XCTAssertEqual(report.launchStatus, .inconclusive)
-        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.launchdx.valid")
+        XCTAssertEqual(report.bundle?.bundleIdentifier, "dev.waxen.valid")
         XCTAssertEqual(report.bundle?.executableName, "Valid")
         XCTAssertTrue(report.bundle?.executableExists == true)
         XCTAssertTrue(report.bundle?.executableIsRegularFile == true)
@@ -44,7 +44,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "InconclusiveSignature.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.inconclusive",
+                "CFBundleIdentifier": "dev.waxen.inconclusive",
                 "CFBundleExecutable": "InconclusiveSignature"
             ],
             executable: "InconclusiveSignature"
@@ -135,7 +135,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "DirectoryExecutable.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.directory",
+                "CFBundleIdentifier": "dev.waxen.directory",
                 "CFBundleExecutable": "DirectoryExecutable"
             ],
             executable: nil
@@ -156,7 +156,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "UnreadableExecutable.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.unreadable",
+                "CFBundleIdentifier": "dev.waxen.unreadable",
                 "CFBundleExecutable": "UnreadableExecutable"
             ],
             executable: "UnreadableExecutable"
@@ -183,7 +183,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "UnreadableMachO.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.unreadable-macho",
+                "CFBundleIdentifier": "dev.waxen.unreadable-macho",
                 "CFBundleExecutable": "UnreadableMachO"
             ],
             executable: "UnreadableMachO"
@@ -207,7 +207,7 @@ final class BundleInspectorTests: XCTestCase {
         let app = try makeApp(
             name: "MissingExecutable.app",
             plist: [
-                "CFBundleIdentifier": "dev.launchdx.missing",
+                "CFBundleIdentifier": "dev.waxen.missing",
                 "CFBundleExecutable": "Missing"
             ],
             executable: nil
@@ -222,7 +222,7 @@ final class BundleInspectorTests: XCTestCase {
 
     private func makeEmptyApp(name: String) throws -> URL {
         let root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("launchdx-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("waxen-\(UUID().uuidString)", isDirectory: true)
         let app = root.appendingPathComponent(name, isDirectory: true)
         try FileManager.default.createDirectory(
             at: app.appendingPathComponent("Contents", isDirectory: true),
