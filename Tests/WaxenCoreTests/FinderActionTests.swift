@@ -45,6 +45,9 @@ final class FinderActionTests: XCTestCase {
         XCTAssertEqual(info[FinderAction.ownerKey] as? Bool, true)
         let service = try XCTUnwrap((info["NSServices"] as? [[String: Any]])?.first)
         XCTAssertEqual((service["NSMenuItem"] as? [String: String])?["default"], FinderAction.menuTitle)
+        XCTAssertEqual(service["NSIconName"] as? String, FinderAction.iconName)
+        let icon = try Data(contentsOf: url.appendingPathComponent("Contents/Resources/workflowCustomImage.png"))
+        XCTAssertEqual(Array(icon.prefix(8)), [137, 80, 78, 71, 13, 10, 26, 10], "A real PNG is bundled with the workflow")
         XCTAssertEqual(service["NSMessage"] as? String, "runWorkflowAsService")
         XCTAssertEqual(service["NSSendFileTypes"] as? [String], FinderAction.acceptedTypes)
 
@@ -92,6 +95,18 @@ final class FinderActionTests: XCTestCase {
         }
         XCTAssertThrowsError(try action.install(waxenPath: "/x"))
         XCTAssertTrue(FileManager.default.fileExists(atPath: contents.path))
+    }
+
+    func testInstallMigratesOriginalLaunchDXWorkflow() throws {
+        let action = makeAction()
+        let contents = action.workflowURL.appendingPathComponent("Contents", isDirectory: true)
+        try FileManager.default.createDirectory(at: contents, withIntermediateDirectories: true)
+        let old = try PropertyListSerialization.data(fromPropertyList: ["LaunchDXQuickAction": true], format: .xml, options: 0)
+        try old.write(to: contents.appendingPathComponent("Info.plist"))
+        try action.install(waxenPath: "/a/waxen")
+        let info = try plist(contents.appendingPathComponent("Info.plist"))
+        XCTAssertEqual(info[FinderAction.ownerKey] as? Bool, true)
+        XCTAssertNil(info["LaunchDXQuickAction"])
     }
 
     func testShellScriptQuotesPaths() {

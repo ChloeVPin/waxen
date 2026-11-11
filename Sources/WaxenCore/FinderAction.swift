@@ -24,6 +24,7 @@ public struct FinderAction {
     public static let menuTitle = "Why Won’t This Open?"
     /// Marks the workflow as ours so uninstall never deletes someone else's.
     static let ownerKey = "WaxenQuickAction"
+    static let iconName = "workflowCustomImage"
     public static let fallbackExecutables = ["/opt/homebrew/bin/waxen", "/usr/local/bin/waxen"]
     static let acceptedTypes = [
         "com.apple.application-bundle",
@@ -65,6 +66,9 @@ public struct FinderAction {
         let contents = workflowURL.appendingPathComponent("Contents", isDirectory: true)
         do {
             try fileManager.createDirectory(at: contents, withIntermediateDirectories: true)
+            let resources = contents.appendingPathComponent("Resources", isDirectory: true)
+            try fileManager.createDirectory(at: resources, withIntermediateDirectories: true)
+            try FinderActionIcon.data.write(to: resources.appendingPathComponent(Self.iconName + ".png"), options: .atomic)
             try Self.infoPlist().write(to: contents.appendingPathComponent("Info.plist"), options: .atomic)
             try Self.documentWorkflow(script: Self.shellScript(waxenPath: waxenPath))
                 .write(to: contents.appendingPathComponent("document.wflow"), options: .atomic)
@@ -133,7 +137,7 @@ public struct FinderAction {
         guard let data = try? Data(contentsOf: info),
               let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any]
         else { return false }
-        return plist[Self.ownerKey] as? Bool == true
+        return plist[Self.ownerKey] as? Bool == true || plist["LaunchDXQuickAction"] as? Bool == true
     }
 
     /// Prefer the stable Homebrew symlink over a versioned Cellar path, so the
@@ -183,7 +187,7 @@ public struct FinderAction {
         let plist: [String: Any] = [
             ownerKey: true,
             "NSServices": [[
-                "NSIconName": "NSActionTemplate",
+                "NSIconName": iconName,
                 "NSMenuItem": ["default": menuTitle],
                 "NSMessage": "runWorkflowAsService",
                 "NSRequiredContext": ["NSApplicationIdentifier": "com.apple.finder"],
@@ -261,7 +265,7 @@ public struct FinderAction {
                 "serviceInputTypeIdentifier": "com.apple.Automator.fileSystemObject",
                 "serviceOutputTypeIdentifier": "com.apple.Automator.nothing",
                 "serviceProcessesInput": false,
-                "systemImageName": "NSActionTemplate",
+
                 "useAutomaticInputType": false,
                 "workflowTypeIdentifier": "com.apple.Automator.servicesMenu"
             ]
