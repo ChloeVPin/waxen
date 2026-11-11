@@ -8,7 +8,7 @@ The default output is now a short plain-language verdict. `--details` prints the
 
 ### Rebrand
 
-Renamed the project, executable, Swift modules, and GitHub repository to Waxen. Update Action references to `ChloeVPin/waxen`; GitHub does not redirect Action calls from renamed repositories. Homebrew distribution is pending; build from source for now.
+Renamed the project, executable, Swift modules, and GitHub repository to Waxen. Update Action references to `ChloeVPin/waxen`; GitHub does not redirect Action calls from renamed repositories. Homebrew builds from the published source release: `brew install ChloeVPin/waxen/waxen`.
 
 ### Added
 

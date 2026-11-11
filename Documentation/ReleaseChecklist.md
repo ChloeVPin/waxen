@@ -2,7 +2,7 @@
 
 ## Repository quality
 
-1. Confirm the version in `Sources/WaxenCore/Version.swift`, `man/waxen.1`, and the Homebrew formula.
+1. Confirm the version in `Sources/WaxenCore/Version.swift`, `man/waxen.1`, and the Homebrew formula in `ChloeVPin/homebrew-waxen`.
 1a. Make sure the Homebrew formula has a `caveats` block that points to the Finder Quick Action: `Right-click apps in Finder: waxen finder install`.
 2. Update `CHANGELOG.md`.
 3. Confirm `LICENSE`, `SECURITY.md`, and `CONTRIBUTING.md`.

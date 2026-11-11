@@ -83,3 +83,28 @@ jobs:
           echo "Source and real macOS validation passed."
           echo "Developer ID signing and notarization were not run because release credentials are not configured."
           echo "Configure the documented repository secrets and DEVELOPER_ID_APPLICATION variable before publishing a signed release."
+
+  source-release:
+    name: Publish source release
+    needs: source-validation
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && vars.RELEASE_CREDENTIALS_CONFIGURED != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package source and checksums
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir release
+          git archive --format=tar.gz --prefix="waxen-${version}/" HEAD > "release/waxen-${version}-source.tar.gz"
+          (cd release && sha256sum *.tar.gz > SHA256SUMS)
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Waxen ${{ github.ref_name }}
+          body: |
+            Waxen explains why macOS won't open an app, disk image, or installer.
+
+            This release contains source code, not a Developer ID signed or notarized binary.
+            Build with Swift 5.9 or newer on macOS 13 or newer, or install through the Homebrew tap.
+            See CHANGELOG.md for the plain-language verdicts, Finder Quick Action, and new Waxen identity.
+          files: release/*

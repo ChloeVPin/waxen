@@ -3,7 +3,7 @@
 Run waxen in CI so a macOS job fails when the built `.app`, `.dmg`, or `.pkg` would be blocked. The file is not modified.
 
 ```yaml
-- uses: ChloeVPin/waxen@main
+- uses: ChloeVPin/waxen@v0.3.0
   with:
     path: dist/MyApp.dmg
 ```
@@ -21,7 +21,7 @@ From a checkout of this repo you can provide the binary directly:
     binary: .build/release/waxen
 ```
 
-Use `main` until a rebranded Action release is tagged. The CLI version (for example 0.3.0) is the tool release.
+`v0.3.0` pins the first Waxen release. The CLI version (for example 0.3.0) is the tool release.
 
 ## Inputs
 

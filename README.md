@@ -9,10 +9,7 @@ macOS shows that message for apps that really are broken, and also for apps that
 waxen tells you whether macOS is right. It answers one question: **who made this app, and has anyone touched it since?**
 
 ```sh
-git clone https://github.com/ChloeVPin/waxen.git
-cd waxen
-swift build -c release
-install -m 755 .build/release/waxen /usr/local/bin/waxen
+brew install ChloeVPin/waxen/waxen
 waxen ~/Downloads/MyApp.dmg
 ```
 
@@ -89,7 +86,7 @@ When users report that your app "is damaged", ask them for the waxen report inst
 ```markdown
 **App won't open?** Run this and paste the result in an issue:
 
-    # Build Waxen from https://github.com/ChloeVPin/waxen first.
+    brew install ChloeVPin/waxen/waxen
     waxen ~/Downloads/YourApp.dmg --share | pbcopy
 ```
 
@@ -98,7 +95,7 @@ The report lists the signer, notarization, where the file came from, and the exa
 To check a release before publishing it, run waxen in CI on the exact file you'll ship:
 
 ```yaml
-- uses: ChloeVPin/waxen@main
+- uses: ChloeVPin/waxen@v0.3.0
   with:
     path: dist/YourApp.dmg
 ```
@@ -111,6 +108,8 @@ The job fails on a confirmed blocker, and the verdict appears in the job summary
 swift build -c release
 .build/release/waxen /Applications/Calculator.app
 ```
+
+Homebrew builds Waxen from source; Xcode Command Line Tools are required. No prebuilt notarized binary is published yet.
 
 Requires macOS 13 or newer. Which checks are available depends on the macOS version, permissions, and the Apple tools installed.
 

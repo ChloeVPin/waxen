@@ -4,7 +4,7 @@
 
 The release workflow always runs source tests, release compilation, emitted-report schema validation, and real macOS integration fixtures.
 
-The signed release job is gated by the repository variable `RELEASE_CREDENTIALS_CONFIGURED` set to `true`. When enabled, the first signed-release step checks every required secret, including `KEYCHAIN_PASSWORD`, without printing values. Without the variable, the workflow succeeds with an explicit message that Developer ID signing and notarization were skipped. This is the expected state for a repository without an Apple Developer account.
+The signed release job is gated by the repository variable `RELEASE_CREDENTIALS_CONFIGURED` set to `true`. When enabled, the first signed-release step checks every required secret, including `KEYCHAIN_PASSWORD`, without printing values. Without the variable, the workflow succeeds with an explicit message that Developer ID signing and notarization were skipped. For version tags, the credential-free path also publishes a source archive and SHA-256 checksums. It does not publish an unsigned binary.
 
 ## Required configuration for a signed release
 
