@@ -89,7 +89,7 @@ jobs:
           assert any(item in ('signature.unsigned', 'signature.invalid') for item in ids)
           PY
       - name: Action wrapper tests
-        run: babash Scripts/test-action.sh
+        run: bash Scripts/test-action.sh
       - name: Action on unsigned fixture (expect blocker)
         id: blocked
         continue-on-error: true
