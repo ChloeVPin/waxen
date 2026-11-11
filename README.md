@@ -1,3 +1,5 @@
+<img src="assets/waxen.svg" alt="Waxen wax seal logo" width="96" height="96">
+
 # Waxen
 
 > **“MyApp” is damaged and can’t be opened. You should move it to the Trash.**
